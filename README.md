@@ -91,11 +91,7 @@ The design can easily be extended to persistent storage or a backend service.
 * Simplified balances ✅
 * Settle dues ✅
 
----
 
-## Submission
 
-📨 **Assignment Link:**
-[https://forms.gle/an7MvEAjZ8cghR1A8](https://forms.gle/an7MvEAjZ8cghR1A8)
 
 
