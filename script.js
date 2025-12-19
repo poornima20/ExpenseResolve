@@ -9,6 +9,10 @@ let splitMode = "equal";
 let currentGroupName = null;
 
 const STORAGE_KEY = "expenseDB";
+let expandedYouOwe = {};
+let expandedYouAreOwed = {};
+
+
 
 /***********************
  * INIT DATABASE
@@ -447,3 +451,258 @@ document.getElementById("totalAmount")
 
 document.getElementById("paidBy")
   ?.addEventListener("change", renderSplitUI);
+
+
+  /***********************History for Your Owe and You are Owed***********************/
+
+  function getYouOweHistory() {
+  const db = getDB();
+  const group = db.groups[currentGroupName];
+
+  const history = [];
+
+  group.expenses.forEach(exp => {
+    if (
+      exp.paidBy !== user &&           // someone else paid
+      exp.splits[user] &&              // you owe
+      !exp.settled[user]               // not yet paid
+    ) {
+      history.push({
+        expenseId: exp.id,
+        to: exp.paidBy,
+        amount: exp.splits[user],
+        date: exp.date
+      });
+    }
+  });
+
+  return history;
+}
+
+function getYouAreOwedHistory() {
+  const db = getDB();
+  const group = db.groups[currentGroupName];
+
+  const history = [];
+
+  group.expenses.forEach(exp => {
+    if (exp.paidBy !== user) return;
+
+    Object.entries(exp.splits).forEach(([person, amount]) => {
+      if (!exp.settled[person]) {
+        history.push({
+          expenseId: exp.id,
+          from: person,
+          amount,
+          date: exp.date
+        });
+      }
+    });
+  });
+
+  return history;
+}
+
+function renderYouOweHistory() {
+  const container = document.getElementById("youOweHistory");
+  container.innerHTML = "";
+
+  const db = getDB();
+  const group = db.groups[currentGroupName];
+
+  const aggregate = {};
+
+  // ✅ CORRECT RULE FOR YOU OWE
+  group.expenses.forEach(exp => {
+    if (exp.paidBy === user) return;           // someone else paid
+    if (!exp.splits[user]) return;             // YOU must owe
+    if (exp.settled[user]) return;
+
+    aggregate[exp.paidBy] =
+      (aggregate[exp.paidBy] || 0) + exp.splits[user];
+  });
+
+  if (!Object.keys(aggregate).length) {
+    container.innerHTML = "<p>No dues 🎉</p>";
+    return;
+  }
+
+  Object.entries(aggregate).forEach(([person, total]) => {
+    const section = document.createElement("div");
+    section.style.marginBottom = "16px";
+
+    const isOpen = expandedYouOwe[person];
+
+    section.innerHTML = `
+      <div style="font-weight:600; cursor:pointer;"
+           onclick="toggleYouOwe('${person}')">
+        You owe ${person} ₹${total.toFixed(2)}
+      </div>
+      <div id="owe-details-${person}"
+           style="display:${isOpen ? "block" : "none"};
+                  margin-left:12px; margin-top:8px;">
+      </div>
+    `;
+
+    container.appendChild(section);
+
+    const detailsDiv = section.querySelector(`#owe-details-${person}`);
+
+    // ✅ DETAILS — same rule
+    group.expenses.forEach(exp => {
+      if (exp.paidBy !== person) return;
+      const amt = exp.splits[user];
+      if (!amt || exp.settled[user]) return;
+
+      const row = document.createElement("div");
+      row.style.marginBottom = "6px";
+
+      row.innerHTML = `
+        ₹${amt.toFixed(2)} • ${exp.date}
+        <button onclick="markPaid('${exp.id}', '${user}')">
+          Mark Paid
+        </button>
+      `;
+
+      detailsDiv.appendChild(row);
+    });
+  });
+}
+
+
+function toggleYouAreOwed(person) {
+  expandedYouAreOwed[person] = !expandedYouAreOwed[person];
+  renderYouAreOwedHistory();
+}
+
+
+function toggleYouOwe(person) {
+  expandedYouOwe[person] = !expandedYouOwe[person];
+  renderYouOweHistory();
+}
+
+
+
+function renderYouAreOwedHistory() {
+  const container = document.getElementById("youAreOwedHistory");
+  container.innerHTML = "";
+
+  const db = getDB();
+  const group = db.groups[currentGroupName];
+
+  // STEP 1: aggregate totals per person
+  const aggregate = {};
+
+  group.expenses.forEach(exp => {
+    if (exp.paidBy !== user) return;
+
+    Object.entries(exp.splits).forEach(([person, amt]) => {
+       if (person === user) return;
+      if (exp.settled[person]) return;
+      aggregate[person] = (aggregate[person] || 0) + amt;
+    });
+  });
+
+  if (!Object.keys(aggregate).length) {
+    container.innerHTML = "<p>No one owes you 🎉</p>";
+    return;
+  }
+
+  // STEP 2: render per person
+  Object.entries(aggregate).forEach(([person, total]) => {
+    const section = document.createElement("div");
+    section.style.marginBottom = "16px";
+
+    const isOpen = expandedYouAreOwed[person];
+
+
+    section.innerHTML = `
+      <div
+        style="font-weight:600; cursor:pointer;"
+        onclick="toggleYouAreOwed('${person}')"
+      >
+        ${person} owes ₹${total.toFixed(2)}
+      </div>
+      <div
+        id="details-${person}"
+        style="display:${isOpen ? "block" : "none"};
+               margin-left:12px; margin-top:8px;"
+      ></div>
+    `;
+
+    container.appendChild(section);
+
+    // STEP 3: fill individual expenses
+    const detailsDiv = section.querySelector(`#details-${person}`);
+
+    group.expenses.forEach(exp => {
+  // 🔒 AGAIN enforce the rule
+  if (exp.paidBy !== user) return;
+
+  const amt = exp.splits[person];
+  if (!amt || exp.settled[person]) return;
+
+  const row = document.createElement("div");
+  row.style.marginBottom = "6px";
+
+  row.innerHTML = `
+    ₹${amt.toFixed(2)} • ${exp.date}
+    <button onclick="markPaid('${exp.id}', '${person}')">
+      Mark Paid
+    </button>
+  `;
+
+  detailsDiv.appendChild(row);
+});
+
+  });
+}
+
+
+function markPaid(expenseId, person) {
+  const db = getDB();
+  const group = db.groups[currentGroupName];
+
+  const expense = group.expenses.find(e => e.id == expenseId);
+  if (!expense) return;
+
+  expense.settled[person] = true;
+
+  saveDB(db);
+
+  renderBalances();
+  renderYouOweHistory();
+  renderYouAreOwedHistory();
+}
+
+function showYouOweHistory() {
+  expandedYouOwe = {};
+  document.getElementById("historyModal").style.display = "flex";
+  document.getElementById("youAreOwedHistory").innerHTML = "";
+  renderYouOweHistory();
+}
+
+
+function showYouAreOwedHistory() {
+  expandedYouAreOwed = {};
+  document.getElementById("historyModal").style.display = "flex";
+  document.getElementById("youOweHistory").innerHTML = "";
+  renderYouAreOwedHistory();
+}
+
+
+function closeHistory() {
+  const modal = document.getElementById("historyModal");
+  modal.style.display = "none";
+
+  // Optional: clear content when closing
+  document.getElementById("youOweHistory").innerHTML = "";
+  document.getElementById("youAreOwedHistory").innerHTML = "";
+}
+
+document.getElementById("historyModal").addEventListener("click", (e) => {
+  if (e.target.id === "historyModal") {
+    closeHistory();
+  }
+});
+

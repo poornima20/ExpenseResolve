@@ -42,14 +42,15 @@
 
   <!-- BALANCES -->
   <div class="balance-row">
-    <div class="summary-card owe">
-      <p>You Owe</p>
-       <h3 id="youOwe">₹0</h3>
-    </div>
-    <div class="summary-card owed" onclick="showOwedHistory()">
-      <p>You Are Owed</p>
-      <h3 id="youAreOwed">₹0</h3>
-    </div>
+    <div class="summary-card owe" onclick="showYouOweHistory()">
+  <p>You Owe</p>
+  <h3 id="youOwe">₹0</h3>
+</div>
+
+<div class="summary-card owed" onclick="showYouAreOwedHistory()">
+  <p>You Are Owed</p>
+  <h3 id="youAreOwed">₹0</h3>
+</div>
   </div>
 
   <!-- ADD EXPENSE -->
@@ -113,7 +114,9 @@
     overflow:auto;
   ">
     <h3>Payment History</h3>
-    <div id="historyContent"></div>
+    <div id="youOweHistory" style="margin-bottom:20px;"></div>
+    <div id="youAreOwedHistory"></div>
+
     <button onclick="closeHistory()" style="margin-top:10px">Close</button>
   </div>
 </div>
