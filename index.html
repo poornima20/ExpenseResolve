@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Expense Sharing App</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="app">
+
+  <!-- LEFT SIDEBAR -->
+  <div class="sidebar">
+    <div class="user-circle">
+  <img src="https://api.dicebear.com/7.x/initials/svg?seed=U&backgroundColor=6366f1&textColor=ffffff" />
+</div>
+    <h3>User</h3>
+    <h4>Your Groups</h4>
+    <ul id="groupList"></ul>
+    <button class="add-group-btn" onclick="addGroup()">+ Add Group</button>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="content">
+    <h2 id="groupTitle">Select a Group</h2>    
+    <div id="emptyState" class="empty-state">
+    <p>Choose a group from the sidebar or create a new one to get started.</p>
+  </div>
+
+  <div id="dashboard" class="dashboard" style="display:none;">
+
+  <!-- MEMBERS -->
+  <div class="card members-card">
+    <h4>Members</h4>
+    <div class="member-chips">
+      <span class="chip you">User</span>
+      <span class="chip">Alice</span>
+      <span class="chip">Bob</span>
+      <span class="chip add" onclick="addMember()">+ Add</span>
+    </div>
+  </div>
+
+  <!-- BALANCES -->
+  <div class="balance-row">
+    <div class="summary-card owe">
+      <p>You Owe</p>
+       <h3 id="youOwe">₹0</h3>
+    </div>
+    <div class="summary-card owed" onclick="showOwedHistory()">
+      <p>You Are Owed</p>
+      <h3 id="youAreOwed">₹0</h3>
+    </div>
+  </div>
+
+  <!-- ADD EXPENSE -->
+  <div class="card expense-card">
+    <h4>Add Expense</h4>
+
+    <input id="totalAmount" class="amount-input" placeholder="₹ Enter amount" />
+
+    <!-- PAID BY -->
+    <div class="paid-by-row">
+      <label for="paidBy">Paid by</label>
+      <select id="paidBy"></select>
+    </div>
+
+
+
+    <div class="split-tabs">
+        <button onclick="setSplit('equal')" class="active">Equal</button>
+  <button onclick="setSplit('exact')">Exact</button>
+  <button onclick="setSplit('percent')">Percentage</button>
+    </div>
+
+    <div id="splitArea" class="split-list">
+      <div class="split-row you">
+        <span>User (You)</span>
+        <span>₹100</span>
+      </div>
+      <div class="split-row">
+        <span>Alice</span>
+        <input placeholder="₹" />
+      </div>
+      <div class="split-row">
+        <span>Bob</span>
+        <input placeholder="₹" />
+      </div>
+    </div>
+
+    <button class="primary-btn" onclick="addExpense()">Split Expense</button>
+  </div>
+
+</div>
+
+</div>
+
+
+  <div id="historyModal" style="
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.4);
+  align-items:center;
+  justify-content:center;
+">
+  <div style="
+    background:#fff;
+    padding:20px;
+    border-radius:12px;
+    width:400px;
+    max-height:70vh;
+    overflow:auto;
+  ">
+    <h3>Payment History</h3>
+    <div id="historyContent"></div>
+    <button onclick="closeHistory()" style="margin-top:10px">Close</button>
+  </div>
+</div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

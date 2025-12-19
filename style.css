@@ -1,0 +1,414 @@
+/* ================= RESET ================= */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", system-ui, Arial, sans-serif;
+  background: #f3f4f6;
+  color: #111827;
+}
+
+/* ================= APP LAYOUT ================= */
+.app {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar {
+  width: 260px;
+  background: #ffffff;
+  padding: 28px 20px;
+  border-right: 1px solid #e5e7eb;
+}
+
+.user-circle {
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #6366f1;
+}
+
+.user-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sidebar h3 {
+  text-align: center;
+  margin: 10px 0 30px;
+}
+
+.sidebar h4 {
+  font-size: 13px;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin-bottom: 10px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar li {
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 6px;
+  transition: background 0.2s;
+}
+
+.sidebar li:hover {
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+/* ================= CONTENT ================= */
+.content {
+  flex: 1;
+  padding: 32px;
+}
+
+.content h2 {
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+/* ================= CARDS ================= */
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+}
+
+.card h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 16px;
+}
+
+/* ================= MEMBERS ================= */
+.card ul {
+  padding-left: 16px;
+  margin-bottom: 16px;
+}
+
+.card ul li {
+  margin-bottom: 6px;
+}
+
+/* ================= BALANCES ================= */
+.balance-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.balance-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+}
+
+.balance-card h4 {
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.balance-card.owe {
+  border-left: 6px solid #ef4444;
+}
+
+.balance-card.owed {
+  border-left: 6px solid #22c55e;
+}
+
+/* ================= ADD EXPENSE ================= */
+.split-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+}
+
+.split-tabs {
+  display: flex;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.split-tabs button {
+  flex: 1;
+  background: #eef2ff;
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #4338ca;
+}
+
+.split-tabs button:hover {
+  background: #e0e7ff;
+}
+
+/* ================= MEMBER ROW ================= */
+.member-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px dashed #e5e7eb;
+}
+
+.member-row:last-child {
+  border-bottom: none;
+}
+
+.member-row label {
+  font-size: 14px;
+}
+
+.member-row input {
+  width: 100px;
+}
+
+/* ================= YOU ROW ================= */
+.you-row {
+  opacity: 0.6;
+  font-style: italic;
+}
+
+/* ================= INPUTS & BUTTONS ================= */
+input,
+select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  margin-bottom: 14px;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #6366f1;
+}
+
+button {
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  background: #6366f1;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #4f46e5;
+}
+/* ================= DASHBOARD ================= */
+.dashboard {
+  max-width: 880px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* ================= GENERIC CARD ================= */
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 22px 24px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+}
+
+/* ================= MEMBERS (COMPACT) ================= */
+.members-card {
+  padding-bottom: 18px;
+}
+
+.member-chips {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  padding: 6px 14px;
+  font-size: 13px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.chip.you {
+  background: #eef2ff;
+  color: #4f46e5;
+  font-weight: 600;
+}
+
+.chip.add {
+  background: transparent;
+  border: 1px dashed #c7d2fe;
+  color: #4f46e5;
+}
+
+/* ================= BALANCES (CALM, SIDE BY SIDE) ================= */
+.balance-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.summary-card {
+  padding: 20px 22px;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+}
+
+.summary-card p {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.summary-card h3 {
+  margin-top: 6px;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.summary-card.owe {
+  border-left: 5px solid #ef4444;
+}
+
+.summary-card.owed {
+  border-left: 5px solid #22c55e;
+}
+
+/* ================= EXPENSE (PRIMARY FOCUS) ================= */
+.expense-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 26px;
+  box-shadow: 0 12px 32px rgba(79,70,229,0.12);
+}
+
+/* HERO AMOUNT INPUT */
+.amount-input {
+  font-size: 26px;
+  font-weight: 600;
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid #c7d2fe;
+  background: #f8fafc;
+}
+
+.amount-input::placeholder {
+  color: #94a3b8;
+}
+
+/* ================= SPLIT TABS ================= */
+.split-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.split-tabs button {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: #f8fafc;
+  color: #475569;
+  font-weight: 600;
+}
+
+.split-tabs button.active {
+  background: #4f46e5;
+  color: white;
+  border-color: #4f46e5;
+}
+
+/* ================= SPLIT LIST ================= */
+.split-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.split-row {
+  display: grid;
+  grid-template-columns: 1fr 120px 120px;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+}
+
+
+.split-row span {
+  font-size: 14px;
+  color: #334155;
+}
+
+.split-row input {
+  width: 110px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  background: #f8fafc;
+}
+
+.split-row.you {
+  opacity: 0.6;
+}
+
+/* ================= PRIMARY ACTION ================= */
+.primary-btn {
+  margin-top: 8px;
+  padding: 16px;
+  border-radius: 16px;
+  background: #4f46e5;
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  box-shadow: 0 10px 30px rgba(79,70,229,0.35);
+}
+
+.split-row input {
+  background: #ffffff;
+  border: 2px solid #c7d2fe;
+}
+
+.paid-by-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.paid-by-row label {
+  font-size: 13px;
+  color: #555;
+}
+
+#paidBy {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
