@@ -61,6 +61,30 @@ function renderGroups() {
   });
 }
 
+function addGroup() {
+  const name = prompt("Enter group name");
+  if (!name) return;
+
+  const db = getDB();
+
+  if (db.groups[name]) {
+    alert("Group already exists");
+    return;
+  }
+
+  // ✅ Create fresh group
+  db.groups[name] = {
+    members: [user],   // 👈 YOU are always included
+    expenses: []
+  };
+
+  saveDB(db);
+
+  renderGroups();
+  openGroup(name); // auto-open new group
+}
+
+
 /***********************
  * OPEN GROUP
  ***********************/
